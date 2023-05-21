@@ -118,7 +118,7 @@ describe('TextMatcher', () => {
     ]);
   });
 
-  test('payload should works', () => {
+  test('payload without empty rule should works', () => {
     const content = 'apple_sun_banana_Apple_sun_food_sun';
     const tm = createTextMatcher([
       new RegExp('apple', 'gi'),
@@ -128,17 +128,45 @@ describe('TextMatcher', () => {
     expect(tm.exec(content)).toMatchObject([
       {
         text: 'apple',
-        payload: { index: 0, position: 0 },
+        payload: { position: 0, ruleIndex: 0, matchIndex: 0 },
       },
       '_',
       {
         text: 'sun',
-        payload: { index: 1, position: 6 },
+        payload: { position: 6, ruleIndex: 1, matchIndex: 1 },
       },
       '_banana_',
       {
         text: 'Apple',
-        payload: { index: 2, position: 17 },
+        payload: { position: 17, ruleIndex: 0, matchIndex: 2 },
+      },
+      '_sun_food_sun',
+    ]);
+  });
+
+  test('payload with empty rule should works', () => {
+    const content = 'apple_sun_banana_Apple_sun_food_sun';
+    const tm = createTextMatcher([
+      new RegExp(''),
+      new RegExp('apple', 'gi'),
+      '',
+      new RegExp('sun'),
+    ]);
+
+    expect(tm.exec(content)).toMatchObject([
+      {
+        text: 'apple',
+        payload: { position: 0, ruleIndex: 1, matchIndex: 0 },
+      },
+      '_',
+      {
+        text: 'sun',
+        payload: { position: 6, ruleIndex: 3, matchIndex: 1 },
+      },
+      '_banana_',
+      {
+        text: 'Apple',
+        payload: { position: 17, ruleIndex: 1, matchIndex: 2 },
       },
       '_sun_food_sun',
     ]);

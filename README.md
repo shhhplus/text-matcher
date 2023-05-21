@@ -24,9 +24,15 @@ const result = tm.exec('Welcome everyone to come and join my birthday party.');
 // result:
 [
   'Welcome ',
-  { text: 'everyone', payload: { index: 0, position: 8 } },
+  {
+    text: 'everyone',
+    payload: { position: 8, ruleIndex: 0, matchIndex: 0 },
+  },
   ' to come and join my ',
-  { text: 'birthday', payload: { index: 1, position: 37 } },
+  {
+    text: 'birthday',
+    payload: { position: 37, ruleIndex: 1, matchIndex: 1 },
+  },
   ' party.',
 ];
 ```
@@ -42,11 +48,20 @@ const result = tm.exec('apple_sun_banana_Apple_sun_food_sun');
 
 // result:
 [
-  { text: 'apple', payload: { index: 0, position: 0 } },
+  {
+    text: 'apple',
+    payload: { position: 0, ruleIndex: 0, matchIndex: 0 },
+  },
   '_sun_banana_',
-  { text: 'Apple', payload: { index: 1, position: 17 } },
+  {
+    text: 'Apple',
+    payload: { position: 17, ruleIndex: 0, matchIndex: 1 },
+  },
   '_sun_',
-  { text: 'food', payload: { index: 2, position: 27 } },
+  {
+    text: 'food',
+    payload: { position: 27, ruleIndex: 1, matchIndex: 2 },
+  },
   '_sun',
 ];
 ```
