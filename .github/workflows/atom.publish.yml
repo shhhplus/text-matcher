@@ -1,0 +1,26 @@
+name: Atom Publish
+on:
+  workflow_call:
+    inputs:
+      repo_name:
+        required: true
+        type: string
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: dist
+      - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
+      - run: ls -l
+      - name: publish to npm
+        run: |
+          cd dist/${{ inputs.repo_name }}
+          pwd
+          ls -l
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

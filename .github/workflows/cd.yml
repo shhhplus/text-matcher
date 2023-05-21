@@ -1,0 +1,45 @@
+name: CD
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo [repositoryUrl] ${{ github.repositoryUrl }}
+      - run: echo [ref] ${{ github.ref }}
+      - run: echo [event_name] ${{ github.event_name }}
+      - run: echo [pull_request.merged] ${{ github.event.pull_request.merged }}
+
+  get_computed:
+    if: github.event.pull_request.merged == true
+    uses: './.github/workflows/atom.get_computed.yml'
+
+  test:
+    if: github.event.pull_request.merged == true
+    needs: [info, get_computed]
+    uses: './.github/workflows/atom.test.yml'
+    secrets: inherit
+
+  build:
+    if: github.event.pull_request.merged == true
+    needs: [test, get_computed]
+    uses: './.github/workflows/atom.build.yml'
+    with:
+      repo_name: ${{ needs.get_computed.outputs.repo_name }}
+
+  publish:
+    if: github.event.pull_request.merged == true
+    needs: [build, get_computed]
+    secrets: inherit
+    uses: './.github/workflows/atom.publish.yml'
+    with:
+      repo_name: ${{ needs.get_computed.outputs.repo_name }}
+
+  tag:
+    if: github.event.pull_request.merged == true
+    needs: [publish]
+    uses: './.github/workflows/atom.tag.yml'
