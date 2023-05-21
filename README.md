@@ -1,8 +1,8 @@
 # text-matcher
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shhhplus/text-matcher/blob/master/LICENSE) [![npm version](https://img.shields.io/npm/v/@shhhplus/text-matcher.svg?style=flat)](https://www.npmjs.com/package/@shhhplus/text-matcher) [![codecov](https://img.shields.io/codecov/c/github/shhhplus/text-matcher/main?token=MPV0GHAKL9)](https://codecov.io/gh/shhhplus/text-matcher) [![build status](https://img.shields.io/github/actions/workflow/status/shhhplus/text-matcher/cd.yml)](https://github.com/shhhplus/text-matcher/actions)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/shhhplus/text-matcher/blob/main/LICENSE) [![npm version](https://img.shields.io/npm/v/@shhhplus/text-matcher.svg?style=flat)](https://www.npmjs.com/package/@shhhplus/text-matcher) [![codecov](https://img.shields.io/codecov/c/github/shhhplus/text-matcher/main?token=MPV0GHAKL9)](https://codecov.io/gh/shhhplus/text-matcher) [![build status](https://img.shields.io/github/actions/workflow/status/shhhplus/text-matcher/cd.yml)](https://github.com/shhhplus/text-matcher/actions)
 
-This tool can use specified rules to match text. If you want to use it in React, you can consider choosing [@shhhplus/react-text-matcher](https://www.npmjs.com/package/@shhhplus/@shhhplus/react-text-matcher).
+This tool can use specified rules to match text. If you want to use it in React, you can consider choosing [@shhhplus/react-text-matcher](https://www.npmjs.com/package/@shhhplus/react-text-matcher).
 
 ## Install
 
