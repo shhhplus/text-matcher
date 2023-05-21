@@ -65,3 +65,9 @@ const result = tm.exec('apple_sun_banana_Apple_sun_food_sun');
   '_sun',
 ];
 ```
+
+## Parameters
+
+| name  | type                                        |
+| ----- | ------------------------------------------- |
+| rules | string \| RegExp \| Array<string \| RegExp> |
