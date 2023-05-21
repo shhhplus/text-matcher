@@ -1,8 +1,9 @@
 type MatchedNode = {
   text: string;
   payload: {
-    index: number;
     position: number;
+    ruleIndex: number;
+    matchIndex: number;
   };
 };
 
@@ -18,36 +19,53 @@ type Task =
       node: string;
     };
 
+type InnerRule = {
+  index: number;
+  pattern: RegExp;
+};
+
 export default function createTextMatcher(rules: (string | RegExp)[]) {
-  const rules2use: RegExp[] = rules
-    .filter((r) => r)
+  const innerRules: InnerRule[] = rules
+    .map<[string | RegExp, number]>((r, index) => {
+      return [r, index];
+    })
+    .filter((r) => r[0])
     .map((r) => {
-      if (typeof r === 'string') {
-        return new RegExp(`${r}`, 'g');
+      if (typeof r[0] === 'string') {
+        return {
+          index: r[1],
+          pattern: new RegExp(`${r[0]}`, 'g'),
+        };
       } else {
-        return r;
+        return {
+          index: r[1],
+          pattern: r[0],
+        };
       }
     })
-    .filter((r) => r.source);
+    .filter((r) => {
+      const { source } = r.pattern;
+      return source && source !== new RegExp('').source;
+    });
 
   return {
     exec: (content: string) => {
-      return compile(content, rules2use);
+      return compile(content, innerRules);
     },
   };
 }
 
-const compile = (content: string, rules: RegExp[]): Node[] => {
+const compile = (content: string, innerRules: InnerRule[]): Node[] => {
   if (!content) {
     return [];
   }
 
-  if (rules.length === 0) {
+  if (innerRules.length === 0) {
     return [content];
   }
 
   let tasks: Task[] = [{ done: false, node: content }];
-  for (const rule of rules) {
+  for (const rule of innerRules) {
     let skipable = false;
     tasks = tasks.reduce<Task[]>((acc, cur) => {
       if (cur.done || skipable) {
@@ -59,14 +77,14 @@ const compile = (content: string, rules: RegExp[]): Node[] => {
     }, []);
   }
   const nodes = tasks.map((t) => t.node);
-  let index = 0;
+  let matchIndex = 0;
   let position = 0;
   nodes.forEach((node) => {
     if (typeof node === 'string') {
       position += node.length;
     } else {
-      node.payload.index = index++;
       node.payload.position = position;
+      node.payload.matchIndex = matchIndex++;
       position += node.text.length;
     }
   });
@@ -76,17 +94,16 @@ const compile = (content: string, rules: RegExp[]): Node[] => {
 
 const split = (
   content: string,
-  rule: RegExp,
+  rule: InnerRule,
 ): {
   tasks: Task[];
   skipable: boolean;
 } => {
-  const regex = rule;
   const tasks: Task[] = [];
   let skipable = false;
   let cursor = 0;
   let result = null;
-  while ((result = regex.exec(content)) !== null) {
+  while ((result = rule.pattern.exec(content)) !== null) {
     const value = result[0];
     const index = result.index;
     if (index !== cursor) {
@@ -101,14 +118,15 @@ const split = (
       node: {
         text: value,
         payload: {
-          index: -1,
           position: -1,
+          ruleIndex: rule.index,
+          matchIndex: -1,
         },
       },
     });
     cursor = index + value.length;
 
-    if (!regex.global) {
+    if (!rule.pattern.global) {
       skipable = true;
       break;
     }
