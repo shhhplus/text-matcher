@@ -59,7 +59,27 @@ describe('TextMatcher', () => {
     ]);
   });
 
-  test('single rule with regex should works', () => {
+  test('single rule (non array) shoul works', () => {
+    const content = 'apple_banana_Apple_sun_food';
+
+    expect(createTextMatcher('Apple').exec(content)).toMatchObject([
+      'apple_banana_',
+      { text: 'Apple' },
+      '_sun_food',
+    ]);
+
+    expect(createTextMatcher(new RegExp('banana')).exec(content)).toMatchObject(
+      ['apple_', { text: 'banana' }, '_Apple_sun_food'],
+    );
+
+    expect(createTextMatcher('').exec(content)).toMatchObject([content]);
+
+    expect(createTextMatcher(new RegExp('')).exec(content)).toMatchObject([
+      content,
+    ]);
+  });
+
+  test('single rule (array) with regex should works', () => {
     const content = 'apple_banana_Apple_sun_food';
 
     expect(createTextMatcher([/apple/]).exec(content)).toMatchObject([
@@ -87,12 +107,9 @@ describe('TextMatcher', () => {
 
   test('multiple rules with regex should works', () => {
     const content = 'apple_sun_banana_Apple_sun_food_sun';
-    const tm = createTextMatcher([
-      new RegExp('apple', 'gi'),
-      new RegExp('sun'),
-    ]);
+    const rules = [new RegExp('apple', 'gi'), new RegExp('sun')];
 
-    expect(tm.exec(content)).toMatchObject([
+    expect(createTextMatcher(rules).exec(content)).toMatchObject([
       { text: 'apple' },
       '_',
       { text: 'sun' },
@@ -120,12 +137,9 @@ describe('TextMatcher', () => {
 
   test('payload without empty rule should works', () => {
     const content = 'apple_sun_banana_Apple_sun_food_sun';
-    const tm = createTextMatcher([
-      new RegExp('apple', 'gi'),
-      new RegExp('sun'),
-    ]);
+    const rules = [new RegExp('apple', 'gi'), new RegExp('sun')];
 
-    expect(tm.exec(content)).toMatchObject([
+    expect(createTextMatcher(rules).exec(content)).toMatchObject([
       {
         text: 'apple',
         payload: { position: 0, ruleIndex: 0, matchIndex: 0 },
@@ -146,14 +160,15 @@ describe('TextMatcher', () => {
 
   test('payload with empty rule should works', () => {
     const content = 'apple_sun_banana_Apple_sun_food_sun';
-    const tm = createTextMatcher([
+
+    const rules = [
       new RegExp(''),
       new RegExp('apple', 'gi'),
       '',
       new RegExp('sun'),
-    ]);
+    ];
 
-    expect(tm.exec(content)).toMatchObject([
+    expect(createTextMatcher(rules).exec(content)).toMatchObject([
       {
         text: 'apple',
         payload: { position: 0, ruleIndex: 1, matchIndex: 0 },

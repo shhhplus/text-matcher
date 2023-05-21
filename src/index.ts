@@ -24,8 +24,11 @@ type InnerRule = {
   pattern: RegExp;
 };
 
-export default function createTextMatcher(rules: (string | RegExp)[]) {
-  const innerRules: InnerRule[] = rules
+export default function createTextMatcher(
+  rules: string | RegExp | Array<string | RegExp>,
+) {
+  const rules2use = Array.isArray(rules) ? rules : [rules];
+  const innerRules: InnerRule[] = rules2use
     .map<[string | RegExp, number]>((r, index) => {
       return [r, index];
     })
