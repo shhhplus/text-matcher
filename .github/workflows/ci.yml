@@ -1,0 +1,32 @@
+name: CI
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+jobs:
+  info:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo [repositoryUrl] ${{ github.repositoryUrl }}
+      - run: echo [ref] ${{ github.ref }}
+      - run: echo [event_name] ${{ github.event_name }}
+
+  get_computed:
+    uses: './.github/workflows/atom.get_computed.yml'
+
+  test:
+    needs: [info, get_computed]
+    uses: './.github/workflows/atom.test.yml'
+    secrets: inherit
+
+  build:
+    needs: [test, get_computed]
+    uses: './.github/workflows/atom.build.yml'
+    with:
+      repo_name: ${{ needs.get_computed.outputs.repo_name }}

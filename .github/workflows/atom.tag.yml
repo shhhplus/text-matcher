@@ -1,0 +1,10 @@
+name: Atom Tag
+on: workflow_call
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "my_project_version=$(jq .version package.json | tr -d '"')" >> $GITHUB_ENV
+      - run: git tag v${{ env.my_project_version }}
+      - run: git push origin v${{ env.my_project_version }}

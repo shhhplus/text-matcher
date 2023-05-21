@@ -1,0 +1,19 @@
+name: Atom Build
+on:
+  workflow_call:
+    inputs:
+      repo_name:
+        required: true
+        type: string
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - run: npm i
+      - run: npm run build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.repo_name }}
+          path: dist

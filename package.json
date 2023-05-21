@@ -1,0 +1,56 @@
+{
+  "name": "text-matcher",
+  "version": "1.0.0",
+  "description": "This tool can use specified rules to match text.",
+  "keywords": [
+    "keyword",
+    "words",
+    "text",
+    "content",
+    "matcher",
+    "match",
+    "regular expression",
+    "RegExp"
+  ],
+  "main": "./src/index.js",
+  "scripts": {
+    "lint": "eslint src rollup",
+    "test": "jest --coverage",
+    "build": "rollup --config ./rollup/rollup.config.ts --configPlugin @rollup/plugin-typescript --bundleConfigAsCjs",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shhhplus/text-matcher.git"
+  },
+  "author": "shhhplus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shhhplus/text-matcher/issues"
+  },
+  "homepage": "https://github.com/shhhplus/text-matcher",
+  "devDependencies": {
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-typescript": "^7.21.5",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-terser": "^0.4.1",
+    "@rollup/plugin-typescript": "^11.1.1",
+    "@types/jest": "^29.5.1",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "babel-jest": "^29.5.0",
+    "eslint": "^8.41.0",
+    "jest": "^29.5.0",
+    "rollup": "^3.21.6",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-delete": "^2.0.0",
+    "sort-package-json": "^2.4.1",
+    "tslib": "^2.5.0",
+    "typescript": "^5.0.4",
+    "husky": "^8.0.0"
+  },
+  "dependencies": {}
+}
